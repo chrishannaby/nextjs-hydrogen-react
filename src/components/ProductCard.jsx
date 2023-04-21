@@ -1,5 +1,11 @@
 import { RadioGroup } from "@headlessui/react";
-import { useState } from "react";
+import {
+  useProduct,
+  Image,
+  useMoney,
+  ShopPayButton,
+  useShop,
+} from "@shopify/hydrogen-react";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -34,22 +40,24 @@ const placeholderProduct = {
 };
 
 export default function ProductCard() {
-  const [selectedVariant, setSelectedVariant] = useState(
-    placeholderProduct.variants[2]
-  );
+  const { product, variants, selectedVariant, setSelectedVariant } =
+    useProduct();
+
+  const price = useMoney(selectedVariant.price);
+  const shop = useShop();
+  const domain = shop.getShopifyDomain();
 
   return (
     <div className="grid w-full grid-cols-1 items-start gap-x-6 gap-y-8 sm:grid-cols-12 lg:items-center lg:gap-x-8">
       <div className="aspect-[2/3] overflow-hidden rounded-lg bg-gray-100 sm:col-span-4 lg:col-span-5">
-        <img
-          src={placeholderProduct.imageSrc}
-          alt={placeholderProduct.imageAlt}
+        <Image
+          data={product.featuredImage}
           className="object-cover object-center h-full"
         />
       </div>
       <div className="sm:col-span-8 lg:col-span-7">
         <h2 className="text-xl font-medium text-gray-900 sm:pr-12">
-          {placeholderProduct.title}
+          {product.title}
         </h2>
 
         <section aria-labelledby="information-heading" className="mt-1">
@@ -57,9 +65,7 @@ export default function ProductCard() {
             Product information
           </h3>
 
-          <p className="font-medium text-gray-900">
-            {placeholderProduct.price}
-          </p>
+          <p className="font-medium text-gray-900">{price.localizedString}</p>
         </section>
 
         <section aria-labelledby="options-heading" className="mt-8">
@@ -79,7 +85,7 @@ export default function ProductCard() {
                   Choose a size
                 </RadioGroup.Label>
                 <div className="grid grid-cols-7 gap-2">
-                  {placeholderProduct.variants.map((variant) => (
+                  {variants.map((variant) => (
                     <RadioGroup.Option
                       key={variant.title}
                       value={variant}
@@ -105,12 +111,10 @@ export default function ProductCard() {
                 </div>
               </RadioGroup>
             </div>
-            <button
-              type="submit"
-              className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              Add to bag
-            </button>
+            <ShopPayButton
+              variantIds={[selectedVariant.id]}
+              storeDomain={domain}
+            />
           </form>
         </section>
       </div>
