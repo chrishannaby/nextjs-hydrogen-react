@@ -4,9 +4,11 @@ import { ShopifyProvider } from "@shopify/hydrogen-react";
 export default function App({ Component, pageProps }) {
   return (
     <ShopifyProvider
-      storeDomain="https://paigedemo20230411.myshopify.com"
-      storefrontToken="05e0d82260b46e7158635cd9cc3cd907"
-      storefrontApiVersion="2023-04"
+      storeDomain={process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}
+      storefrontToken={process.env.NEXT_PUBLIC_SHOPIFY_PUBLIC_STOREFRONT_TOKEN}
+      storefrontApiVersion={
+        process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_VERSION
+      }
       countryIsoCode="US"
       languageIsoCode="EN"
     >
