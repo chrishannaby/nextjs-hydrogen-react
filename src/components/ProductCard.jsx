@@ -44,7 +44,7 @@ export default function ProductCard() {
         <img
           src={placeholderProduct.imageSrc}
           alt={placeholderProduct.imageAlt}
-          className="object-cover object-center"
+          className="object-cover object-center h-full"
         />
       </div>
       <div className="sm:col-span-8 lg:col-span-7">
