@@ -1,14 +1,6 @@
-import {
-  createStorefrontClient,
-  ProductProvider,
-} from "@shopify/hydrogen-react";
+import { ProductProvider } from "@shopify/hydrogen-react";
 import ProductCard from "@/components/ProductCard";
-
-const client = createStorefrontClient({
-  storeDomain: "https://paigedemo20230411.myshopify.com",
-  privateStorefrontToken: "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",
-  storefrontApiVersion: "2023-04",
-});
+import { fetchFromStorefrontApi } from "@/lib/storefrontClient";
 
 const PRODUCT_QUERY = `
 {
@@ -46,13 +38,7 @@ const PRODUCT_QUERY = `
 `;
 
 export async function getStaticProps() {
-  const response = await fetch(client.getStorefrontApiUrl(), {
-    method: "POST",
-    headers: client.getPrivateTokenHeaders(),
-    body: JSON.stringify({
-      query: PRODUCT_QUERY,
-    }),
-  });
+  const response = await fetchFromStorefrontApi(PRODUCT_QUERY);
   const json = await response.json();
   return {
     props: {
