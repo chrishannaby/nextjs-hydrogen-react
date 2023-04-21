@@ -1,9 +1,9 @@
 import { createStorefrontClient } from "@shopify/hydrogen-react";
 
 const client = createStorefrontClient({
-  storeDomain: "https://paigedemo20230411.myshopify.com",
-  privateStorefrontToken: "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",
-  storefrontApiVersion: "2023-04",
+  storeDomain: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN,
+  privateStorefrontToken: process.env.SHOPIFY_PRIVATE_STOREFRONT_TOKEN,
+  storefrontApiVersion: process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_VERSION,
 });
 
 export function fetchFromStorefrontApi(query, variables = {}) {
