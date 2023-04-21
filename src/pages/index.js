@@ -1,14 +1,8 @@
-import { Inter } from "next/font/google";
 import {
   createStorefrontClient,
   ProductProvider,
-  useProduct,
-  ShopPayButton,
-  useShop,
-  Image,
 } from "@shopify/hydrogen-react";
-
-const inter = Inter({ subsets: ["latin"] });
+import ProductCard from "@/components/ProductCard";
 
 const client = createStorefrontClient({
   storeDomain: "https://paigedemo20230411.myshopify.com",
@@ -28,11 +22,12 @@ const PRODUCT_QUERY = `
           id
           url
         }
-        variants(first: 3) {
+        variants(first: 20) {
           edges {
             node {
               id
               title
+              availableForSale 
               selectedOptions {
                 name
                 value
@@ -66,39 +61,16 @@ export async function getStaticProps() {
   };
 }
 
-export function AddVariantQuantity1({ variantId, storeDomain }) {
-  return <ShopPayButton variantIds={[variantId]} storeDomain={storeDomain} />;
-}
-
-function Product() {
-  const shop = useShop();
-  const domain = shop.getShopifyDomain();
-  const { product, variants, setSelectedVariant, selectedVariant } =
-    useProduct();
+export default function Home({ products }) {
   return (
-    <>
-      <h1>{product?.title}</h1>
-      {variants?.map((variant) => {
+    <main className="m-24 flex flex-col gap-12">
+      {products.map((product) => {
         return (
-          <button onClick={() => setSelectedVariant(variant)} key={variant?.id}>
-            {variant?.title}
-          </button>
+          <ProductProvider data={product.node}>
+            <ProductCard />
+          </ProductProvider>
         );
       })}
-      <Image data={product.featuredImage} />
-      <ShopPayButton
-        variantIds={[selectedVariant?.id]}
-        storeDomain={shop.getShopifyDomain()}
-      />
-    </>
-  );
-}
-
-export default function Home({ products }) {
-  const product = products[0].node;
-  return (
-    <ProductProvider data={product}>
-      <Product />
-    </ProductProvider>
+    </main>
   );
 }
